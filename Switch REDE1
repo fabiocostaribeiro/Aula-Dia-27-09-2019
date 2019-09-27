@@ -1,0 +1,50 @@
+enable
+configure terminal
+hostname SW-11
+banner motd "ACESSO AUTORIZADO APENAS PARA O DEPARTAMENTO DE TI!"
+enable secret SenhaEnable
+ip domain-name peachanddaisy.local
+crypto key generate rsa general-keys modulus 1024
+username fabiocosta privilege 15 secret Penelopy
+username estagiario privilege 1 secret senha
+line console 0 15
+password SenhadaConsole
+login
+exit
+service password-encryption
+line vty 0 15
+password SenhadaVTY
+transport input ssh
+exec-timeout 5
+login local
+exit
+vlan 10
+name vlan10
+exit
+vlan 20
+name vlan20
+exit
+vlan 100
+name vlan 100
+exit
+interfacef 0/1
+switchport mode access 
+switchport access vlan 10
+interface vlan 10
+ip address 172.16.0.0 255.255.255.0
+description PC1
+interface f 0/2
+switchport mode access
+switchport access vlan 20
+interface vlan 20
+ip address 172.16.1.0 255.255.255.128
+description PC2
+interface g 1/1
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,20,99,100
+interface vlan 100
+ip address 172.16.1.141 255.255.254.0
+exit
+ip default-gateway 172.16.1.129
+do wr
